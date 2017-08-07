@@ -2,36 +2,54 @@
 
 ## Install 
 
-##### Requisites
+#### Requisites
 ```
-sudo apt-get install curl
+apt-get install curl
 ```
 
-##### Install : DOCKER
+#### Install : DOCKER
 ```
 curl -fsSL get.docker.com -o get-docker.sh
 sh get-docker.sh
-sudo docker run hello-world
+docker run hello-world
 ```
 
-##### Install : SWARM
+#### Install : SWARM
 ```
-sudo docker swarm init --advertise-addr 10.20.130.11
+docker swarm init --advertise-addr 10.20.130.11
+docker info
+docker system info
+docker node ls
+docker swarm join-token manager
+```
 
-sudo docker info
-sudo docker node ls
-sudo docker swarm join-token manager
+## Configure to exclude TLS security
+#### edit service
 ```
+systemctl status docker
+vim /lib/systemd/system/docker.service
+```
+#### Add -H tcp like follow 
+```
+ExecStart=/usr/bin/dockerd -H fd:// -H tcp://0.0.0.0:2375
+```
+#### Restart
+```
+service docker restart
+```
+
 
 ## Demos
 
-##### Simple SERIVCES (nginx)
+#### Simple SERIVCES (nginx)
 ```
-sudo docker service create -p 80:80 --name web nginx
-sudo docker service ls
-sudo docker service ps web
-sudo docker ps
-
-sudo docker service scale web=2
+docker service create -p 80:80 --name web nginx
+docker service ls
+docker service ps web
+docker ps
+```
+#### Scale SERIVCES (nginx)
+```
+docker service scale web=2
 ```
 

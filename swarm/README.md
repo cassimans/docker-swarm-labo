@@ -5,15 +5,16 @@
 
 #### Install Vote-App
 ```
-sudo docker deploy --compose-file=docker-compose.yml stackdemo
+docker stack deploy --compose-file=docker-compose.yml stackdemo
 ```
 
 #### Go to Vote-App
 ```
+http://host:5000
 http://host:5001
 ```
 
 #### Vote-App Suppression
 ```
-sudo docker stack rm stackdemo
+docker stack rm stackdemo
 ```
