@@ -16,5 +16,6 @@ http://host:5001
 
 #### Vote-App Suppression
 ```
+docker stack ls
 docker stack rm stackdemo
 ```
