@@ -21,7 +21,10 @@ docker node ls
 docker swarm join-token manager
 ```
 
-
+#### Install : PORTAINER IO (https://portainer.io)
+```
+sudo docker run -d -p 9000:9000 -v /var/run/docker.sock:/var/run/docker.sock portainer/portainer
+```
 
 ## Configure to exclude TLS security
 
