@@ -6,21 +6,37 @@ variables:
 stages:
   - deploy
 
-swarm-deploy:
+.swarm-deploy: &swarm-deploy
   stage: deploy
   variables:
     DOCKER_HOST: tcp://$ACTIVATION_SWARM_HOST_1
-    DOCKER_TLS_VERIFY: 1
-    DOCKER_CERT_PATH: ./swarm
     SERVICE_NAME: vote-app
   image: docker:latest
   script:
-    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
-    - docker stack deploy --compose-file=./swarm/vote-app/docker-compose.yml ${CI_PROJECT_NAMESPACE}-${CI_PROJECT_NAME}-${SERVICE_NAME}
-#    - docker stack deploy --with-registry-auth --compose-file=docker-compose.yml ${CI_PROJECT_NAMESPACE}-${CI_PROJECT_NAME}-${SERVICE_NAME}
+    - docker -H tcp://10.20.130.11:2375 ps
   environment:
     name: master
     url: http://${CI_BUILD_REF_NAME}.lampiris.be
   when: manual
   only:
     - master
+    - /^feature.*$/
+
+
+swarm-deploy-mono:
+  <<: *swarm-deploy
+  variables:
+    DOCKER_HOST: tcp://$ACTIVATION_SWARM_HOST_1
+    SERVICE_NAME: vote-app
+  script:
+    - docker -H tcp://10.20.130.11:2375 ps
+    - docker stack deploy --compose-file=./swarm/vote-app/docker-compose-mono.yml ${CI_ENVIRONMENT_SLUG}-${SERVICE_NAME}
+
+swarm-deploy-cluster:
+  <<: *swarm-deploy
+  variables:
+    DOCKER_HOST: tcp://$ACTIVATION_SWARM_HOST_1
+    SERVICE_NAME: vote-app
+  script:
+    - docker -H tcp://10.20.130.11:2375 ps
+    - docker stack deploy --compose-file=./swarm/vote-app/docker-compose-cluster.yml ${CI_ENVIRONMENT_SLUG}-${SERVICE_NAME}
