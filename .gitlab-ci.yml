@@ -10,7 +10,7 @@ stages:
   stage: deploy
   variables:
     DOCKER_HOST: tcp://$ACTIVATION_SWARM_HOST_1
-    SERVICE_NAME: vote-app
+    SERVICE_NAME: default-app
   image: docker:latest
   script:
     - docker -H tcp://10.20.130.11:2375 ps
@@ -22,21 +22,33 @@ stages:
     - master
     - /^feature.*$/
 
-
-swarm-deploy-mono:
+swarm-deploy-mono-voteapp:
   <<: *swarm-deploy
   variables:
     DOCKER_HOST: tcp://$ACTIVATION_SWARM_HOST_1
     SERVICE_NAME: vote-app
   script:
     - docker -H tcp://10.20.130.11:2375 ps
+    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
     - docker stack deploy --compose-file=./swarm/vote-app/docker-compose-mono.yml ${CI_ENVIRONMENT_SLUG}-${SERVICE_NAME}
 
-swarm-deploy-cluster:
+swarm-deploy-cluster-voteapp:
   <<: *swarm-deploy
   variables:
     DOCKER_HOST: tcp://$ACTIVATION_SWARM_HOST_1
     SERVICE_NAME: vote-app
   script:
     - docker -H tcp://10.20.130.11:2375 ps
-    - docker stack deploy --compose-file=./swarm/vote-app/docker-compose-cluster.yml ${CI_ENVIRONMENT_SLUG}-${SERVICE_NAME}
+    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
+    - docker stack rm ${CI_ENVIRONMENT_SLUG}-${SERVICE_NAME}
+
+swarm-undeploy-voteapp:
+  <<: *swarm-deploy
+  variables:
+    DOCKER_HOST: tcp://$ACTIVATION_SWARM_HOST_1
+    SERVICE_NAME: vote-app
+  script:
+    - docker -H tcp://10.20.130.11:2375 ps
+    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
+    - docker stack rm ${CI_ENVIRONMENT_SLUG}-${SERVICE_NAME}
+

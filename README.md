@@ -39,6 +39,7 @@ ExecStart=/usr/bin/dockerd -H fd:// -H tcp://0.0.0.0:2375
 ```
 #### Restart
 ```
+systemctl daemon-reload
 service docker restart
 ```
 
