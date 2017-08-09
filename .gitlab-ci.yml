@@ -40,7 +40,7 @@ swarm-deploy-cluster-voteapp:
   script:
     - docker -H tcp://10.20.130.11:2375 ps
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
-    - docker stack rm ${CI_ENVIRONMENT_SLUG}-${SERVICE_NAME}
+    - docker stack deploy --compose-file=./swarm/vote-app/docker-compose-cluster.yml ${CI_ENVIRONMENT_SLUG}-${SERVICE_NAME}
 
 swarm-undeploy-voteapp:
   <<: *swarm-deploy
