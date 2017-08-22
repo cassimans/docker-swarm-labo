@@ -14,7 +14,7 @@ docker run hello-world
 ```
 #### Install : SWARM
 ```
-docker swarm init --advertise-addr 10.20.130.11
+docker swarm init --advertise-addr 10.20.130.15
 docker info
 docker system info
 docker node ls
