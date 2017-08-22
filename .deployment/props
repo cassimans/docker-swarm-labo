@@ -1,0 +1,5 @@
+vm_image: 1760966b-e363-4311-9a7c-0177d7df5e32
+vm_ssh_key_name: deri
+vm_flavor: 2
+vm_net_id: 71a69b6a-97a1-4209-ac10-6f0b91161241
+vm_net_name: customer

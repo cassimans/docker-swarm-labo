@@ -6,6 +6,24 @@ variables:
 stages:
   - deploy
 
+#swarm-install:
+#  stage: deploy
+#  variables:
+#    SERVICE_HOST: $OPEN_STACK_HOST
+#    SERVICE_USER: $OPEN_STACK_USER
+#    SERVICE_PASSWORD: $OPEN_STACK_PASSWORD
+#    SERVICE_NAME: swarm
+#  image: docker:latest
+#  script:
+#    - cd .deployment
+#    - ansible-playbook deploy.yml -i inventory --extra-vars "vm_name=$SERVICE_NAME openstack_url=$SERVICE_HOST openstack_user=$SERVICE_USER openstack_password=$SERVICE_PASSWORD"
+#  environment:
+#    name: master
+#    url: http://${OPEN_STACK_HOST}/horizon
+#  when: manual
+#  only:
+#    - master
+
 .swarm-deploy: &swarm-deploy
   stage: deploy
   variables:

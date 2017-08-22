@@ -1,0 +1,48 @@
+# Creates a new VM and attaches to a network and passes metadata to the instance
+- name: Create nova instance
+  hosts: nova
+  tasks:
+  - name: create instance {{ vm_name }}
+    register: newvm
+    os_server:
+        state: present
+        auth:
+            auth_url: http://{{ openstack_url }}:5000/v2.0
+            username: {{ openstack_user }}
+            password: {{ openstack_password }}
+            project_name: demo
+        name: "{{ vm_name }}"
+        image: 1760966b-e363-4311-9a7c-0177d7df5e32
+        key_name: deri
+        timeout: 200
+        flavor: 2
+        nics:
+            - net-id: 71a69b6a-97a1-4209-ac10-6f0b91161241
+            - net-name: customer
+        auto_ip: yes
+        meta:
+            hostname: "{{ vm_name }}"
+    register: newnode
+
+  - name: add {{ vm_name }} vm to in-memory inventory
+    add_host:
+        name: "{{ vm_name }}"
+        groups: new_nodes
+        ansible_user: debian
+        ansible_host: "{{ item.openstack.public_v4 }}"
+    with_items:
+        - "{{ newnode }}"
+
+  - name: Show Server's IP
+    debug: var=newnode.openstack.public_v4
+
+- name: Connect to new vm
+  hosts: "{{ vm_name }}"
+  become: yes
+  become_method: sudo
+  gather_facts: false
+  tasks:
+    - name: install apps
+      apt: name={{ item }} state=latest
+      with_items:
+        - vim
