@@ -33,7 +33,7 @@ stages:
   script:
     - docker -H $DOCKER_HOST ps
   environment:
-    name: master
+    name: ${CI_COMMIT_REF_NAME}
     url: http://${CI_ENVIRONMENT_SLUG}-${SERVICE_NAME}-voting-app.activation.lampiris.io
 #    url: http://${CI_ENVIRONMENT_SLUG}-${SERVICE_NAME}-result-app.activation.lampiris.io
   when: manual
