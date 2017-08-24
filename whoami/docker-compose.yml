@@ -1,0 +1,18 @@
+version: '3'
+
+services:
+  whoami:
+    image: emilevauge/whoami
+    networks:
+      - web
+    deploy:
+      labels:
+        - "traefik.port=80"
+        - "traefik.backend=whoami"
+        - "traefik.frontend.rule=Host:whoami.activation.lampiris.io"
+        - "traefik.docker.network=traefik_webgateway"
+
+networks:
+  web:
+    external:
+      name: traefik_webgateway

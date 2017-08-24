@@ -1,0 +1,24 @@
+version: '3'
+
+services:
+  portainer:
+    image: portainer/portainer
+    networks:
+      - web
+    ports:
+      - "9000:9000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    deploy:
+      labels:
+        - "traefik.port=9000"
+        - "traefik.backend=portainer"
+        - "traefik.frontend.rule=Host:portainer.activation.lampiris.io"
+        - "traefik.docker.network=traefik_webgateway"
+      placement:
+        constraints: [node.role == manager]
+
+networks:
+  web:
+    external:
+      name: traefik_webgateway

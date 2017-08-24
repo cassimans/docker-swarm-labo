@@ -19,12 +19,28 @@ docker info
 docker system info
 docker node ls
 docker swarm join-token manager
+
+#### Join SWARM
+```
+docker swarm leave --force
+docker swarm join --token ...
+docker node promote node-3 node-2
+docker node demote node-3 node-2
 ```
 
 #### Install : PORTAINER IO (https://portainer.io)
 ```
 sudo docker run -d -p 9000:9000 -v /var/run/docker.sock:/var/run/docker.sock portainer/portainer
 ```
+
+
+#### Install : TRAEFIK (https://docs.traefik.io/#get-it)
+```
+wget -O /var/local/bin/docker-compose  https://github.com/docker/compose/releases/download/1.15.0/docker-compose-Linux-x86_64 
+cp traefik/docker-compose.yml .
+docker-compose -p traefik up -d 
+```
+
 
 ## Configure to exclude TLS security
 

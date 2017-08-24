@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+  proxy:
+    image: traefik
+    command: --web --docker --docker.swarmmode --docker.domain=activation.lampiris.io --docker.watch --logLevel=DEBUG
+    networks:
+      - webgateway
+    ports:
+      - "80:80"
+      - "8080:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /dev/null:/traefik.toml
+    deploy:
+      labels:
+        - "traefik.port=80"
+        - "traefik.backend=traefik"
+        - "traefik.frontend.rule=Host:traefik.activation.lampiris.io"
+      placement:
+        constraints: [node.role == manager]
+
+networks:
+  webgateway:
+    driver: overlay
