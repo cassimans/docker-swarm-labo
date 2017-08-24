@@ -32,8 +32,6 @@ services:
       labels:
         - "APP=VOTING"
         - "traefik.port=80"
-        - "traefik.backend=voting-app"
-        - "traefik.frontend.rule=Host:voting-app.activation.lampiris.io"
         - "traefik.docker.network=traefik_webgateway"
 #      placement:
 #        constraints: [node.role == worker]
@@ -48,8 +46,6 @@ services:
     deploy:
       labels:
         - "traefik.port=80"
-        - "traefik.backend=result-app"
-        - "traefik.frontend.rule=Host:result-app.activation.lampiris.io"
         - "traefik.docker.network=traefik_webgateway"
 #      placement:
 #        constraints: [node.role == worker]
