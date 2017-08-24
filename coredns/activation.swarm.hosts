@@ -1,0 +1,11 @@
+$ttl 38400
+activation.lampiris.io.      IN      SOA     ns.activation.lampiris.io. admin.activation.lampiris.io. (
+                        1488536900
+                        10800
+                        3600
+                        604800
+                        38400 )
+activation.lampiris.io.      IN      NS      ns.activation.lampiris.io.
+ns.activation.lampiris.io.   IN      A       10.20.130.15
+dns.activation.lampiris.io.  IN      A       10.20.130.15
+*.activation.lampiris.io.    IN      A       10.20.130.15

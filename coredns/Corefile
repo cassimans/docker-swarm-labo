@@ -1,0 +1,19 @@
+activation.lampiris.io:53 {
+    proxy . 8.8.8.8:53
+    file /activation.swarm.hosts {
+        transfer to *
+    }
+    errors stdout
+    log stdout
+}
+
+lampiris.be:53 lampiris.local:53 lampiris.biz:53 {
+  proxy . 10.1.2.33:53 10.1.2.34:53
+  errors stdout
+  log stdout
+}
+
+.:53 {
+    proxy . 8.8.8.8:53
+    log stdout
+}
