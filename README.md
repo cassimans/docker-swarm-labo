@@ -19,6 +19,7 @@ docker info
 docker system info
 docker node ls
 docker swarm join-token manager
+```
 
 #### Join SWARM
 ```
