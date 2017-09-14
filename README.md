@@ -1,6 +1,6 @@
 # Lampiris Docker Swarm 
 
-## Install 
+## Install SWARM Host
 
 #### Requisites
 ```
@@ -11,37 +11,22 @@ apt-get install curl
 curl -fsSL get.docker.com -o get-docker.sh
 sh get-docker.sh
 docker run hello-world
+docker info
+docker system info
 ```
 #### Install : SWARM
 ```
 docker swarm init --advertise-addr 10.20.130.15
-docker info
-docker system info
 docker node ls
+```
+#### Join Existing SWARM
+```
 docker swarm join-token manager
-```
-
-#### Join SWARM
-```
 docker swarm leave --force
 docker swarm join --token ...
 docker node promote node-3 node-2
 docker node demote node-3 node-2
 ```
-
-#### Install : PORTAINER IO (https://portainer.io)
-```
-sudo docker run -d -p 9000:9000 -v /var/run/docker.sock:/var/run/docker.sock portainer/portainer
-```
-
-
-#### Install : TRAEFIK (https://docs.traefik.io/#get-it)
-```
-wget -O /var/local/bin/docker-compose  https://github.com/docker/compose/releases/download/1.15.0/docker-compose-Linux-x86_64 
-cp traefik/docker-compose.yml .
-docker-compose -p traefik up -d 
-```
-
 
 ## Configure to exclude TLS security
 
@@ -60,11 +45,51 @@ systemctl daemon-reload
 service docker restart
 ```
 
+## Configure SWARM With Services
 
-## Demos
+#### Install : TRAEFIK (https://docs.traefik.io/#get-it), PORTAINER IO (https://portainer.io)
+```
+export DOCKER_HOST=tcp://10.20.130.15:2375
+docker stack deploy -c traefik/docker-compose.yml traefik
+docker stack deploy -c portainer/docker-compose.yml portainer
+```
 
 
-### Services (nginx)
+# Tips commands
+
+## Container access
+```
+docker service ls     # find service name
+docker service ps xxx # find node
+docker ps             # On node, find NAMES
+docker volume prune --force
+docker exec -it el2-adm_backend.1.g6suznnrwe5iko5ybt1kpq2jo /bin/bash
+apt-get update
+apt-get install vim
+```
+
+## Use Environment File
+
+### With env file
+```
+env $(cat .env | grep ^[A-Z] | xargs) docker stack deploy -c docker-stack-deploy.yml el2-adm  --with-registry-auth
+docker volume prune
+docker exec -it el2-adm_backend.1.g6suznnrwe5iko5ybt1kpq2jo /bin/bash
+```
+`
+### Without env file
+```
+env ADM_DB_HOST=database \
+ADM_DB_PORT=5432 \
+ADM_DB_NAME=el2adm \
+ADM_DB_USER=el2adm \
+ADM_DB_PASSWORD=el2adm \
+PROJECT_VERSION=features-eltwoadm-2993 \
+docker stack deploy --compose-file=docker-stack-deploy.yml el2-adm --with-registry-auth
+``
+
+
+# Demos
 
 #### Create SERIVCES (nginx)
 ```
@@ -99,4 +124,18 @@ http://host:5001
 ```
 docker stack ls
 docker stack rm stackdemo
+```
+
+## Run Images SWARM Without Services (NOT RECOMMENDED)
+
+#### Install : TRAEFIK (https://docs.traefik.io/#get-it)
+```
+wget -O /var/local/bin/docker-compose  https://github.com/docker/compose/releases/download/1.15.0/docker-compose-Linux-x86_64 
+cp traefik/docker-compose.yml .
+docker-compose -p traefik up -d 
+```
+#### Install : PORTAINER IO (https://portainer.io)
+```
+sudo docker run -d -p 9000:9000 -v /var/run/docker.sock:/var/run/docker.sock portainer/portainer
+docker stack deploy -c portainer/docker-compose.yml portainer
 ```
