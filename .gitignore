@@ -11,6 +11,8 @@ buildNumber.properties
 .mvn/timing.properties
 pom.xml.bak
 
+sentry/data*
+
 
 ### Java template
 *.class
@@ -99,5 +101,6 @@ Icon
 Network Trash Folder
 Temporary Items
 .apdisk
+
 
 

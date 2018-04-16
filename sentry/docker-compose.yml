@@ -1,0 +1,64 @@
+version: '2'
+
+services:
+  nginx:
+    image: nginx
+    ports:
+      - "80:80"
+    links:
+      - sentry
+    volumes:
+      - "./nginx.conf:/etc/nginx/conf.d/default.conf"
+    restart: always
+
+  redis:
+    image: redis
+
+  postgres:
+    image: postgres:9.4
+    environment:
+      POSTGRES_USER: sentry
+      POSTGRES_PASSWORD: sentry
+      POSTGRES_DB: sentry
+    volumes:
+     - ./data:/var/lib/postgresql/data:rw
+
+  sentry:
+    image: sentry:8.22-onbuild
+    links:
+     - redis
+     - postgres
+    ports:
+     - 9000:9000
+    environment:
+      SENTRY_SECRET_KEY: 'DHksdfkjd'
+      SENTRY_POSTGRES_HOST: postgres
+      SENTRY_DB_USER: sentry
+      SENTRY_DB_PASSWORD: sentry
+      SENTRY_REDIS_HOST: redis
+
+  sentry_celery_beat:
+    image: sentry:8.22-onbuild
+    links:
+     - redis
+     - postgres
+    command: "sentry celery beat"
+    environment:
+      SENTRY_SECRET_KEY: 'DHksdfkjd'
+      SENTRY_POSTGRES_HOST: postgres
+      SENTRY_DB_USER: sentry
+      SENTRY_DB_PASSWORD: sentry
+      SENTRY_REDIS_HOST: redis
+
+  sentry_celery_worker:
+    image: sentry:8.22-onbuild
+    links:
+     - redis
+     - postgres
+    command: "sentry celery worker"
+    environment:
+      SENTRY_SECRET_KEY: 'DHksdfkjd'
+      SENTRY_POSTGRES_HOST: postgres
+      SENTRY_DB_USER: sentry
+      SENTRY_DB_PASSWORD: sentry
+      SENTRY_REDIS_HOST: redis
