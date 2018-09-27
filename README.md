@@ -1,4 +1,4 @@
-# Lampiris Docker Swarm 
+# Docker Swarm 
 
 ## Install SWARM Host
 
@@ -76,7 +76,7 @@ env $(cat .env | grep ^[A-Z] | xargs) docker stack deploy -c docker-stack-deploy
 docker volume prune
 docker exec -it el2-adm_backend.1.g6suznnrwe5iko5ybt1kpq2jo /bin/bash
 ```
-`
+
 ### Without env file
 ```
 env ADM_DB_HOST=database \
@@ -86,7 +86,7 @@ ADM_DB_USER=el2adm \
 ADM_DB_PASSWORD=el2adm \
 PROJECT_VERSION=features-eltwoadm-2993 \
 docker stack deploy --compose-file=docker-stack-deploy.yml el2-adm --with-registry-auth
-``
+```
 
 
 # Demos
